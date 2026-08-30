@@ -1,6 +1,21 @@
 import numpy as np
 import pandas as pd
 
+
+def _parse_km(value):
+    """
+    Convierte valores de Kilómetros a float. La fuente mezcla dos formatos:
+    "64000.0" (punto decimal) y "90.000 km" (punto como separador de miles).
+    Se distingue por la cantidad de dígitos después del último punto.
+    """
+    s = str(value).strip().replace(" km", "").replace(",", "")
+    if "." in s:
+        _, _, decimales = s.rpartition(".")
+        if len(decimales) >= 3:
+            s = s.replace(".", "")
+    return float(s)
+
+
 class DataProcessor:
     def __init__(self, df, config=None):
         self.df = df
@@ -61,14 +76,7 @@ class DataProcessor:
             df = df.drop(columns=["Año"], errors="ignore")
 
         if self.config.get("convert_km", True):
-            df["Kilómetros"] = (
-                df["Kilómetros"]
-                .astype(str)
-                .str.replace(" km", "", regex=False)
-                .str.replace(".", "", regex=False)
-                .str.replace(",", "", regex=False)
-                .astype(float)
-            )
+            df["Kilómetros"] = df["Kilómetros"].apply(_parse_km)
 
 
         if self.config.get("drop_low_info", True):

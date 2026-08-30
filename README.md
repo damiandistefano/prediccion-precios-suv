@@ -1,4 +1,4 @@
-# GangaSUV
+# AutoValor
 
 Motor de predicción de precios y detección de oportunidades para el mercado de SUVs usados en Argentina. A partir de miles de publicaciones reales (marca, modelo, año, kilometraje, motor, tipo de combustible, etc.), el sistema estima el precio de mercado de un vehículo y permite identificar autos publicados por debajo de su valor esperado.
 
@@ -74,7 +74,7 @@ Precio real vs. precio predicho sobre una muestra de publicaciones que el modelo
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
-cd GangaSUV
+cd AutoValor
 ```
 
 2. Creá y activá un entorno virtual:

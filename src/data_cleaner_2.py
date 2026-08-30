@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from src.data_cleaner import _parse_km
+
+
 class DataProcessor2:
     def __init__(self, df, config=None):
         self.df = df
@@ -64,14 +67,7 @@ class DataProcessor2:
 
         # 5. Convertir Kilómetros
         if self.config["convert_km"]:
-            df["Kilómetros"] = (
-                df["Kilómetros"]
-                .astype(str)
-                .str.replace(" km", "", regex=False)
-                .str.replace(".", "", regex=False)
-                .str.replace(",", "", regex=False)
-                .astype(float)
-            )
+            df["Kilómetros"] = df["Kilómetros"].apply(_parse_km)
 
         # Agrupación de outliers en categorías poco frecuentes
         if self.config["outlaier_group"]:
