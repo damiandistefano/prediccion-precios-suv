@@ -32,18 +32,18 @@ La red neuronal fue el modelo con mejor desempeño y se usó para generar las pr
 
 ## Demo
 
-Predicciones generadas por el modelo sobre publicaciones reales del set de test:
+Precio real vs. precio predicho sobre una muestra de publicaciones que el modelo no vio durante el entrenamiento:
 
-| Marca      | Modelo         | Año  | Kilómetros | Precio predicho (USD) |
-|------------|----------------|------|-----------:|-----------------------:|
-| Kia        | Soul           | 2015 |    107.000 |                  16.711 |
-| Jeep       | Compass        | 2025 |      4.000 |                  39.017 |
-| Volkswagen | T-Cross        | 2025 |          0 |                  29.366 |
-| Ford       | Territory      | 2024 |     13.000 |                  38.243 |
-| Jeep       | Compass        | 2024 |     25.200 |                  36.263 |
-| Chery      | Tiggo          | 2013 |    116.000 |                  10.664 |
-| Chevrolet  | Tracker        | 2016 |     98.300 |                  16.384 |
-| Toyota     | Corolla Cross  | 2025 |          0 |                  36.668 |
+| Marca      | Modelo      | Precio real (USD) | Precio predicho (USD) |
+|------------|-------------|-------------------:|------------------------:|
+| Citroën    | C4 Cactus   |              15.900 |                   18.132 |
+| Nissan     | Kicks       |              19.911 |                   20.058 |
+| Volkswagen | Tiguan      |              12.149 |                   15.941 |
+| Nissan     | X-Trail     |              50.000 |                   42.817 |
+| Nissan     | Kicks       |              31.000 |                   29.268 |
+| SsangYong  | Musso       |              10.968 |                   20.547 |
+| Renault    | Duster      |              13.000 |                   18.024 |
+| Jeep       | Renegade    |              19.827 |                   31.965 |
 
 ## Estructura del proyecto
 
