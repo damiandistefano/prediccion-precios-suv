@@ -34,16 +34,16 @@ La red neuronal fue el modelo con mejor desempeño y se usó para generar las pr
 
 Precio real vs. precio predicho sobre una muestra de publicaciones que el modelo no vio durante el entrenamiento:
 
-| Marca      | Modelo      | Precio real (USD) | Precio predicho (USD) |
-|------------|-------------|-------------------:|------------------------:|
-| Citroën    | C4 Cactus   |              15.900 |                   18.132 |
-| Nissan     | Kicks       |              19.911 |                   20.058 |
-| Volkswagen | Tiguan      |              12.149 |                   15.941 |
-| Nissan     | X-Trail     |              50.000 |                   42.817 |
-| Nissan     | Kicks       |              31.000 |                   29.268 |
-| SsangYong  | Musso       |              10.968 |                   20.547 |
-| Renault    | Duster      |              13.000 |                   18.024 |
-| Jeep       | Renegade    |              19.827 |                   31.965 |
+| Marca      | Modelo         | Año  | Kilómetros | Cilindrada | Precio real (USD) | Precio predicho (USD) |
+|------------|----------------|:----:|-----------:|:----------:|-------------------:|------------------------:|
+| Ford       | Territory      | 2021 |     75.000 |        1.5 |              29.445 |                   25.687 |
+| Jeep       | Compass        | 2019 |     84.500 |        2.4 |              30.000 |                   39.063 |
+| Toyota     | Corolla Cross  | 2022 |     34.000 |        2.0 |              31.976 |                   39.107 |
+| Peugeot    | 3008           | 2022 |     15.000 |        1.6 |              52.500 |                   38.912 |
+| Chevrolet  | Tracker        | 2018 |    101.652 |        1.8 |              15.608 |                   24.651 |
+| BMW        | X6             | 2013 |    127.000 |        3.0 |              44.000 |                   37.813 |
+| Nissan     | Kicks          | 2020 |     31.500 |        1.6 |              21.852 |                   29.333 |
+| Volkswagen | T-Cross        | 2025 |          0 |        1.0 |              24.467 |                   23.705 |
 
 ## Estructura del proyecto
 
