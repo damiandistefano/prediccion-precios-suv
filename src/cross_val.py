@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 from itertools import product
 
 
@@ -64,12 +64,9 @@ def cross_validate_rf(df, target_col, param_grid, k=5, metric_fn=None, random_st
             best_score = avg_score
             best_params = params
 
-    print("\n✅ Mejores hiperparámetros:", best_params)
-    print(f"🏆 Score promedio (RMSE): {best_score:.4f}")
+    print("\nMejores hiperparámetros:", best_params)
+    print(f"Score promedio (RMSE): {best_score:.4f}")
     return best_params, all_scores
-
-
-from sklearn.model_selection import train_test_split
 
 
 def tune_and_test_rf(
@@ -138,15 +135,17 @@ def tune_and_test_rf(
         "test_rmse": best_test_rmse
         }
 
-param_grid = {
-    "n_trees": [20, 50,100,200],             
-    "max_depth": [5, 20, 50,None],         
-    "min_samples_split": [2, 5, 10],        
-    "max_features": [5,20, "sqrt", "log2"] 
+DEFAULT_PARAM_GRID = {
+    "n_trees": [20, 50, 100, 200],
+    "max_depth": [5, 20, 50, None],
+    "min_samples_split": [2, 5, 10],
+    "max_features": [5, 20, "sqrt", "log2"]
 }
-def evaluate_datasets(resultados_final, datasets_explorations):
+
+def evaluate_datasets(resultados_final, datasets_explorations, param_grid=None):
+    param_grid = param_grid or DEFAULT_PARAM_GRID
     for nombre, dataset in datasets_explorations:
-        print(f"\n📊 Evaluando dataset: {nombre}")
+        print(f"\nEvaluando dataset: {nombre}")
         res = tune_and_test_rf(dataset, target_col="Precio_usd", param_grid=param_grid, top_n=3)
         print(res)
         resultados_final.append({
@@ -159,8 +158,8 @@ def evaluate_datasets(resultados_final, datasets_explorations):
         
 def show_validation_results(df_resultados):
     for _, row in df_resultados.iterrows():
-        print(f"\n📌 Dataset: {row['dataset']}")
-        print(f"🔧 Best Val Params:  {row['best_params_val']}")
-        print(f"📉 Val RMSE:         {row['val_rmse']:.2f}")
-        print(f"🏆 Best Test Params: {row['best_params_test']}")
-        print(f"🧪 Test RMSE:        {row['test_rmse']:.2f}")
+        print(f"\nDataset: {row['dataset']}")
+        print(f"Best Val Params:  {row['best_params_val']}")
+        print(f"Val RMSE:         {row['val_rmse']:.2f}")
+        print(f"Best Test Params: {row['best_params_test']}")
+        print(f"Test RMSE:        {row['test_rmse']:.2f}")

@@ -27,7 +27,9 @@ class DataProcessor:
             "add_cilindrada_times_km": False,
             "add_frecuencia_features": False,
             "outlaier_group": True,
-            "limpieza_de_outliers": True
+            "limpieza_de_outliers": True,
+            "usd_conversion_rate": 1185.26,
+            "reference_year": 2025
         }
 
         self.config = default_config.copy()
@@ -50,12 +52,12 @@ class DataProcessor:
             })
 
         if self.config.get("convert_price", True):
-            usd_conversion_rate = 1185.26
+            usd_conversion_rate = self.config.get("usd_conversion_rate", 1185.26)
             df["Precio_usd"] = np.where(df["Moneda"] == "$", df["Precio"] / usd_conversion_rate, df["Precio"])
             df = df.drop(columns=["Precio", "Moneda"], errors="ignore")
 
         if self.config.get("calc_antiguedad", True):
-            df["Antigüedad"] = 2025 - df["Año"]
+            df["Antigüedad"] = self.config.get("reference_year", 2025) - df["Año"]
             df = df.drop(columns=["Año"], errors="ignore")
 
         if self.config.get("convert_km", True):

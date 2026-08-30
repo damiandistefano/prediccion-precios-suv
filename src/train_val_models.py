@@ -1,7 +1,8 @@
+import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from models.linear_regression import LinearReg
-from src.metrics import*
-import pandas as pd
+from src.metrics import mse, rmse, mae
 
 def split_dataset(df, target_column="Precio_usd", test_size=0.2, random_state=42):
     X = df.drop(columns=[target_column])
@@ -65,7 +66,8 @@ def run_experiment(datasets, metodo="pinv", reg="l2", l2=0.1):
 
         # Entrenamos y predecimos con el modelo
         res = train_pred_linear_reg(
-            processor, X_train_norm, X_val_norm, y_train, y_val.values, ...
+            processor, X_train_norm, X_val_norm, y_train, y_val.values,
+            metodo=metodo, reg=reg, l2=l2
         )
 
 

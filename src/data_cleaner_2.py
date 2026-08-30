@@ -1,21 +1,20 @@
 import numpy as np
 import pandas as pd
 
-class DataProcessor:
+class DataProcessor2:
     def __init__(self, df, config=None):
         self.df = df
         self.mean_std = []
         self.y_mean = None
         self.y_std = None
         
-
         default_config = {
             "clean_columns": True,
             "fix_brand_typos": True,
             "convert_price": True,
             "calc_antiguedad": True,
             "convert_km": True,
-            "one_hot_encode": True,
+            "one_hot_encode": False,
             "drop_low_info": True,
             "parse_motor": True,
             "group_transmission": True,
@@ -25,8 +24,10 @@ class DataProcessor:
             "add_antiguedad_squared": False,
             "add_cilindrada_times_km": False,
             "add_frecuencia_features": False,
-            "outlaier_group": True,
-            "limpieza_de_outliers": True
+            "outlaier_group": False,
+            "limpieza_de_outliers": False,
+            "usd_conversion_rate": 1185.26,
+            "reference_year": 2025
         }
 
         self.config = default_config.copy()
@@ -52,13 +53,13 @@ class DataProcessor:
 
         # 3. Precio a USD
         if self.config["convert_price"]:
-            usd_conversion_rate = 1185.26
+            usd_conversion_rate = self.config.get("usd_conversion_rate", 1185.26)
             df["Precio_usd"] = np.where(df["Moneda"] == "$", df["Precio"] / usd_conversion_rate, df["Precio"])
             df = df.drop(columns=["Precio", "Moneda"], errors="ignore")
 
         # 4. Antigüedad
         if self.config["calc_antiguedad"]:
-            df["Antigüedad"] = 2025 - df["Año"]
+            df["Antigüedad"] = self.config.get("reference_year", 2025) - df["Año"]
             df = df.drop(columns=["Año"], errors="ignore")
 
         # 5. Convertir Kilómetros
@@ -108,29 +109,13 @@ class DataProcessor:
             print(f"Filas iniciales: {inicial} → después del filtrado: {len(df_clean)}")
             df = df_clean
 
-        # 7. One-hot de Marca y Modelo (modificado)
+        # 6. One-hot de Marca y Modelo
         if self.config["one_hot_encode"]:
             for col in ["Marca", "Modelo"]:
                 if col in df.columns:
-                    # Guardar categorías únicas al entrenar
-                    if col not in self.one_hot_categories:
-                        self.one_hot_categories[col] = sorted(df[col].dropna().unique())
-
-                    categories = self.one_hot_categories[col]
-
                     one_hot = pd.get_dummies(df[col], prefix=col)
-
-                    # Asegurar que todas las columnas originales estén
-                    for cat in categories:
-                        col_name = f"{col}_{cat}"
-                        if col_name not in one_hot.columns:
-                            one_hot[col_name] = 0
-
-                    expected_cols = [f"{col}_{c}" for c in categories]
-                    one_hot = one_hot[expected_cols]
-
-                    df = df.drop(columns=[col])
                     df = pd.concat([df, one_hot], axis=1)
+                    df = df.drop(columns=[col])
 
         # 8. Eliminar columnas de poca información
         if self.config["drop_low_info"]:

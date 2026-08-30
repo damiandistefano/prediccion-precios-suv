@@ -1,8 +1,8 @@
-# Predicción de Precios de SUVs 🚗
+# Predicción de Precios de SUVs
 
-Pipeline de Machine Learning en Python para predecir el precio de venta de SUVs de segunda mano en Argentina a partir de datos de publicaciones (marca, modelo, año, kilometraje, motor, tipo de combustible, etc.), y para detectar autos **subvaluados** (publicados por debajo de su precio de mercado estimado). Desarrollado como Proyecto Final para la materia de Aprendizaje Automático (UDESA).
+Pipeline de Machine Learning en Python para predecir el precio de venta de SUVs de segunda mano en Argentina a partir de datos de publicaciones (marca, modelo, año, kilometraje, motor, tipo de combustible, etc.), y para detectar autos subvaluados (publicados por debajo de su precio de mercado estimado). Desarrollado como Proyecto Final para la materia de Aprendizaje Automático (UDESA).
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Lenguaje:** Python 3.10
 - **Manipulación de datos:** pandas, NumPy
@@ -11,19 +11,19 @@ Pipeline de Machine Learning en Python para predecir el precio de venta de SUVs 
 - **Visualización:** Matplotlib, Seaborn
 - **Entorno de desarrollo:** Jupyter Notebook
 
-## ✨ Funcionalidades principales
+## Funcionalidades principales
 
 - **Limpieza y preprocesamiento de datos** (`src/data_cleaner.py`, `src/data_cleaner_2.py`): corrección de marcas mal tipeadas, conversión de precios a USD, cálculo de antigüedad, parseo de kilometraje y cilindrada, codificación one-hot, agrupación de categorías poco frecuentes y filtrado de outliers por IQR.
 - **Ingeniería de features**: variables derivadas como precio por kilómetro, antigüedad al cuadrado, interacción cilindrada×km y frecuencia de marca/modelo (activables por configuración).
 - **Tres enfoques de modelado**:
   - Regresión Lineal implementada a mano (`models/linear_regression.py`), con entrenamiento por pseudo-inversa o gradiente descendente y regularización L1/L2.
-  - Random Forest con búsqueda de hiperparámetros por validación cruzada (`src/extensiones_rf.py`).
+  - Random Forest con búsqueda de hiperparámetros por validación cruzada (`src/cross_val.py`).
   - Red Neuronal (Keras) con validación cruzada y early stopping (`models/nn.py`).
 - **Evaluación de modelos** con métricas MSE, RMSE y MAE (`src/metrics.py`).
-- **Visualizaciones**: comparación de RMSE entre validación/test, distribución de variables, boxplots por tipo de combustible.
-- **Detección de oportunidades**: identificación y ranking de los autos más subvaluados respecto a la predicción del modelo (`src/plots.py`).
+- **Visualizaciones**: comparación de RMSE entre validación/test (`src/plots.py`), distribución de variables y precio por tipo de combustible (`src/data_exploration.py`).
+- **Detección de oportunidades**: identificación y ranking de los autos más subvaluados respecto a la predicción del modelo (`src/extensiones_rf.py`).
 
-## 📂 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 .
@@ -37,16 +37,16 @@ Pipeline de Machine Learning en Python para predecir el precio de venta de SUVs 
 │   └── nn.py                  # Red neuronal (Keras) + validación cruzada
 └── src/
     ├── data_cleaner.py        # Pipeline de limpieza principal (DataProcessor)
-    ├── data_cleaner_2.py      # Variante del pipeline de limpieza
+    ├── data_cleaner_2.py      # Variante del pipeline de limpieza (DataProcessor2)
     ├── data_exploration.py    # Funciones de EDA
     ├── train_val_models.py    # Entrenamiento y evaluación de la regresión lineal
-    ├── cross_val.py           # Utilidades de validación cruzada
-    ├── extensiones_rf.py      # Random Forest + grid search
+    ├── cross_val.py           # Random Forest + búsqueda de hiperparámetros por CV
+    ├── extensiones_rf.py      # Detección y ranking de autos subvaluados
     ├── metrics.py             # MSE, RMSE, MAE
-    └── plots.py                # Visualizaciones de resultados
+    └── plots.py                # Comparación de RMSE validación vs. test
 ```
 
-## 🚀 Instalación y ejecución (Linux / Terminal)
+## Instalación y ejecución (Linux / Terminal)
 
 1. Cloná el repositorio y entrá al directorio:
 
@@ -74,36 +74,46 @@ pip install pandas numpy scikit-learn tensorflow matplotlib seaborn jupyter
 jupyter notebook Notebook_SUVs.ipynb
 ```
 
-> El dataset de entrada se encuentra en `dataset/raw/pf_suvs_i302_1s2025.csv`. Los datasets procesados intermedios se guardan en `dataset/processed/`.
+El dataset de entrada se encuentra en `dataset/raw/pf_suvs_i302_1s2025.csv`. Los datasets procesados intermedios se guardan en `dataset/processed/`.
 
-## 📸 Demo
+## Demo
 
-*(Agregar aquí un GIF o captura de pantalla del notebook en ejecución, por ejemplo el gráfico de comparación de RMSE o el ranking de autos subvaluados: `docs/demo.gif` o `docs/screenshot.png`)*
+Resultado real generado por el modelo sobre el set de test (`dataset/test_masked/`), combinando los datos de entrada (`SUVS_2025-test-masked.csv`) con las predicciones de precio del modelo (`SUVS_2025-test-masked-predictions.csv`):
 
----
+| Marca      | Modelo         | Año  | Kilómetros | Precio predicho (USD) |
+|------------|----------------|------|-----------:|-----------------------:|
+| Kia        | Soul           | 2015 |    107.000 |                  16.711 |
+| Jeep       | Compass        | 2025 |      4.000 |                  39.017 |
+| Volkswagen | T-Cross        | 2025 |          0 |                  29.366 |
+| Ford       | Territory      | 2024 |     13.000 |                  38.243 |
+| Jeep       | Compass        | 2024 |     25.200 |                  36.263 |
+| Chery      | Tiggo          | 2013 |    116.000 |                  10.664 |
+| Chevrolet  | Tracker        | 2016 |     98.300 |                  16.384 |
+| Toyota     | Corolla Cross  | 2025 |          0 |                  36.668 |
 
-## 2. Descripción para GitHub (campo "About")
+*(Agregar aquí también un GIF o captura del notebook en ejecución, por ejemplo el gráfico de comparación de RMSE generado por `src/plots.py`: `docs/demo.gif` o `docs/screenshot.png`)*
+
+## Descripción para GitHub (campo "About")
 
 > Pipeline de Machine Learning en Python (Random Forest, red neuronal y regresión lineal propia) para predecir precios de SUVs usados y detectar autos subvaluados.
 
----
+## Code Review Express
 
-## 3. Code Review Express
+Estado de los puntos detectados en la revisión de código:
 
-Antes de subir el repo al portafolio, conviene resolver lo siguiente:
+**Bugs corregidos**
+- `src/train_val_models.py`: faltaba `import numpy as np` (el archivo usaba `np.float64`/`np.column_stack` sin importarlo). Corregido.
+- `src/train_val_models.py` → `run_experiment`: se pasaba un `...` (Ellipsis) literal como argumento posicional, pisando el parámetro `metodo` y dejando el modelo sin entrenar (pesos en cero). Corregido: ahora se pasan `metodo`, `reg` y `l2` explícitamente.
 
-**🐛 Bugs**
-- **`src/train_val_models.py`**: usa `np.float64` y `np.column_stack` (vía `LinearReg`) sin importar `numpy` en el archivo (`import pandas as pd` está, pero falta `import numpy as np`). Va a explotar con `NameError` en `prepare_data`.
-- **`src/train_val_models.py` → `run_experiment`**: llama a `train_pred_linear_reg(processor, X_train_norm, X_val_norm, y_train, y_val.values, ...)` con `...` (Ellipsis) literal como argumento posicional. Eso pisa el parámetro `metodo` con `Ellipsis` en vez de `"pinv"`, así que nunca entra a las ramas `if metodo == "pinv"` / `elif metodo == "gd"` y el modelo queda con pesos en cero (sin entrenar). Parece código incompleto que quedó a medio escribir.
-- **`models/nn.py`**: `cross_validate_nn` usa `DataProcessor` (de `data_cleaner.py`) mientras que el resto del proyecto (notebook) parece usar `DataProcessor2` en paralelo — dos clases casi idénticas mantenidas por separado es fuente de bugs por desincronización (ver duplicación abajo).
+**Limpieza aplicada**
+- `models/nn.py`: se eliminó un bloque de ~65 líneas de código muerto (versión vieja y comentada de `cross_validate_nn`).
+- `src/train_val_models.py`: se reemplazó el `from src.metrics import*` (wildcard import) por imports explícitos (`mse`, `rmse`, `mae`).
+- `src/cross_val.py`: se movió el `from sklearn.model_selection import train_test_split` (estaba en medio del archivo) junto al resto de los imports al inicio.
+- `src/cross_val.py`: el `param_grid` de Random Forest, definido como variable global a nivel de módulo, se renombró a `DEFAULT_PARAM_GRID` y ahora `evaluate_datasets` lo recibe como parámetro opcional en lugar de depender de estado global.
+- `src/data_cleaner.py` y `src/data_cleaner_2.py`: la tasa de conversión a USD (`1185.26`) y el año de referencia para calcular antigüedad (`2025`) estaban hardcodeados. Ahora son parámetros de `config` (`usd_conversion_rate`, `reference_year`), con el mismo valor por defecto para no alterar el comportamiento actual.
+- Se agregó `.gitignore` (`__pycache__/`, `*.pyc`, `.DS_Store`, `venv/`, `.ipynb_checkpoints/`) y se sacaron del tracking de git los archivos `.DS_Store` y `__pycache__/` que estaban versionados por error.
 
-**🧹 Malas prácticas / mejoras rápidas**
-- **Duplicación de código**: `src/data_cleaner.py` (`DataProcessor`) y `src/data_cleaner_2.py` (`DataProcessor2`) son casi idénticas. Conviene unificarlas en una sola clase parametrizable para evitar mantener dos pipelines de limpieza en paralelo.
-- **Código muerto**: `models/nn.py` tiene ~65 líneas comentadas (una versión vieja de `cross_validate_nn`, líneas 74-138). Si ya no se usa, eliminarlas en vez de dejarlas comentadas.
-- **`import *`**: `src/train_val_models.py` hace `from src.metrics import*` (wildcard import, además sin espacio). Preferible importar explícitamente (`from src.metrics import mse, rmse, mae`).
-- **Imports fuera de lugar**: en `src/extensiones_rf.py`, `from sklearn.model_selection import train_test_split` está en medio del archivo (línea 72) en lugar de al principio.
-- **Estado global mutable**: `param_grid` en `src/extensiones_rf.py` está definido como variable a nivel de módulo (línea 141) — mejor pasarlo como argumento o definirlo en el notebook/config.
-- **Magic numbers**: la tasa de conversión USD (`1185.26`) y el año de referencia (`2025 - df["Año"]`) están hardcodeados dentro del pipeline de limpieza. Convendría pasarlos por `config` para que el pipeline no quede atado a una fecha/tipo de cambio fijos.
-- **Archivos que no deberían estar en git**: `.DS_Store`, `dataset/.DS_Store`, `models/__pycache__/` y `src/__pycache__/` están versionados. Agregar un `.gitignore` (con `__pycache__/`, `*.pyc`, `.DS_Store`, `venv/`) y sacarlos del repo con `git rm -r --cached`.
-- **Falta `requirements.txt`**: no hay archivo de dependencias; para que el proyecto sea reproducible por un tercero conviene agregar uno (`pip freeze > requirements.txt` o una lista curada).
-- **Reporte por `print`**: funciones como `cross_validate_rf` y el filtrado de outliers usan `print()` para reportar progreso/resultados. Está bien para un notebook exploratorio, pero si se reutiliza como librería conviene loguear con el módulo `logging`.
+**Pendiente (a evaluar antes de subir a portafolio)**
+- Duplicación de código: `src/data_cleaner.py` (`DataProcessor`) y `src/data_cleaner_2.py` (`DataProcessor2`) tienen lógica de limpieza casi idéntica pero con APIs distintas (`preprocess_global`/`preprocess_split` vs. `preprocess()` único) y ambas se usan activamente en el notebook. Unificarlas requiere actualizar todas las celdas que las instancian, así que se dejó fuera de este pase para no romper el trabajo en curso sobre el notebook.
+- No hay archivo `requirements.txt`/entorno reproducible; se recomienda agregarlo (`pip freeze > requirements.txt` o una lista curada) para que el proyecto sea reproducible por un tercero.
+- Uso de `print()` para reportar progreso/resultados (por ejemplo en `cross_validate_rf`). Es razonable en un notebook exploratorio, pero si el código se reutiliza como librería conviene migrar a `logging`.
